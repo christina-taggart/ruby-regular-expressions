@@ -1,9 +1,10 @@
 # Determine whether a string contains a Social Security number.
 def has_ssn?(string)
+  string.match(/\d{3}-\d{2}-\d{4}/) ? true : false
 end
 
 puts "has_ssn? returns true if it has what looks like a SSN"
-puts has_ssn?("please don't share this: 234-60-1422") == true
+puts has_ssn?("please don't share this: 234-60-1422") #== true
 
 puts "has_ssn? returns false if it doesn't have a SSN"
 puts has_ssn?("please confirm your identity: XXX-XX-1422") == false
@@ -11,6 +12,8 @@ puts has_ssn?("please confirm your identity: XXX-XX-1422") == false
 
 # Return the Social Security number from a string.
 def grab_ssn(string)
+  return nil if has_ssn?(string) == false
+  string.match(/\d{3}-\d{2}-\d{4}/).to_s
 end
 
 
@@ -23,6 +26,10 @@ puts grab_ssn("please confirm your identity: XXX-XX-1422") == nil
 
 # Return all of the Social Security numbers from a string.
 def grab_all_ssns(string)
+  return [] if has_ssn?(string) == false
+  all_ssn = []
+  all_ssn << string.slice!(/\d{3}-\d{2}-\d{4}/) until has_ssn?(string) == false
+  all_ssn
 end
 
 puts "grab_all_ssns returns all SSNs if the string has any SSNs"
@@ -34,6 +41,8 @@ puts grab_all_ssns("please confirm your identity: XXX-XX-1422") == []
 
 # Obfuscate all of the Social Security numbers in a string. Example: XXX-XX-4430.
 def hide_all_ssns(string)
+  return string if has_ssn?(string) == false
+  string.gsub!(/\d{3}-\d{2}-/, "XXX-XX-")
 end
 
 puts "hide_all_ssns obfuscates any SSNs in the string"
@@ -47,6 +56,8 @@ puts hide_all_ssns(string) == string
 # Ensure all of the Social Security numbers use dashes for delimiters.
 # Example: 480.01.4430 and 480014430 would both be 480-01-4430.
 def format_ssns(string)
+  return string unless string.match(/\d{3}\D+\d{2}\D+\d{4}|\d{9}/)
+  string.gsub!(/(\d{3})\D{0,1}(\d{2})\D{0,1}(\d{4})/) {"#{$1}-#{$2}-#{$3}"}
 end
 
 puts "format_ssns finds and reformat any SSNs in the string"
