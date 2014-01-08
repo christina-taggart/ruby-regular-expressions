@@ -53,6 +53,7 @@ puts hide_all_ssns(string) == string
 # Ensure all of the Social Security numbers use dashes for delimiters.
 # Example: 480.01.4430 and 480014430 would both be 480-01-4430.
 def format_ssns(string)
+  string.gsub(/(\d{3}).?(\d{2}).?(\d{4})/, '\1-\2-\3')
 end
 
 puts "format_ssns finds and reformat any SSNs in the string"
