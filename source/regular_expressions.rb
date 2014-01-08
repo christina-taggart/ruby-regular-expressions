@@ -1,5 +1,6 @@
 # Determine whether a string contains a Social Security number.
 def has_ssn?(string)
+  string.match(/\d{3}-\d{2}-\d{4}/) != nil
 end
 
 puts "has_ssn? returns true if it has what looks like a SSN"
@@ -11,6 +12,12 @@ puts has_ssn?("please confirm your identity: XXX-XX-1422") == false
 
 # Return the Social Security number from a string.
 def grab_ssn(string)
+  ssn_capture = string.match(/\d{3}-\d{2}-\d{4}/)
+  if ssn_capture == nil
+    return nil
+  else
+    ssn_capture[0]
+  end
 end
 
 
@@ -23,6 +30,16 @@ puts grab_ssn("please confirm your identity: XXX-XX-1422") == nil
 
 # Return all of the Social Security numbers from a string.
 def grab_all_ssns(string)
+  arr = string.scan(/\d{3}-\d{2}-\d{4}/)
+  # ssn_capture = string.match(/(\d{3}-\d{2}-\d{4})/).captures
+  # matches = []
+  # unless ssn_capture == nil
+  #   ssn_capture.to_a.each {|capture| matches << capture}
+  # end
+  # p matches
+  # matches
+
+
 end
 
 puts "grab_all_ssns returns all SSNs if the string has any SSNs"
@@ -32,9 +49,16 @@ puts "grab_all_ssns returns an empty Array if it doesn't have any SSNs"
 puts grab_all_ssns("please confirm your identity: XXX-XX-1422") == []
 
 
-# Obfuscate all of the Social Security numbers in a string. Example: XXX-XX-4430.
+#Obfuscate all of the Social Security numbers in a string. Example: XXX-XX-4430.
 def hide_all_ssns(string)
+  arr = string.scan(/(\d{3}-\d{2})(-\d{4})/)
+  arr.each do |ssn|
+    pattern_ssn = Regexp.new ssn[0].concat(ssn[1])
+    string.gsub!(pattern_ssn,"XXX-XX".concat(ssn[1]))
+  end
+  string
 end
+
 
 puts "hide_all_ssns obfuscates any SSNs in the string"
 puts hide_all_ssns("234-60-1422, 350-80-0744, 013-60-8762") == "XXX-XX-1422, XXX-XX-0744, XXX-XX-8762"
@@ -47,6 +71,12 @@ puts hide_all_ssns(string) == string
 # Ensure all of the Social Security numbers use dashes for delimiters.
 # Example: 480.01.4430 and 480014430 would both be 480-01-4430.
 def format_ssns(string)
+  arr = string.scan(/(\d{3})(-|.|)(\d{2})(-|.|)(\d{4})/)
+  arr.each do |ssn|
+    pattern_ssn = Regexp.new(ssn[0]+ssn[1]+ssn[2]+ssn[3]+ssn[4])
+    string.gsub!(pattern_ssn, ssn[0].concat("-").concat(ssn[2]).concat("-").concat(ssn[4]))
+  end
+  string
 end
 
 puts "format_ssns finds and reformat any SSNs in the string"
