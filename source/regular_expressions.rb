@@ -1,5 +1,6 @@
 # Determine whether a string contains a Social Security number.
 def has_ssn?(string)
+  /\d{3}-\d{2}-\d{4}/.match(string) == nil ? false : true
 end
 
 puts "has_ssn? returns true if it has what looks like a SSN"
@@ -11,6 +12,14 @@ puts has_ssn?("please confirm your identity: XXX-XX-1422") == false
 
 # Return the Social Security number from a string.
 def grab_ssn(string)
+
+ x = string.match(/\d{3}-\d{2}-\d{4}/)
+ if x == nil
+   nil
+ else
+  x[0]
+ end
+
 end
 
 
